@@ -10,13 +10,13 @@ public class Detector : MonoBehaviour
     public TextMeshProUGUI Informacion;
     public Image Imagen;
 
+    public GameObject PanelGameOver;
+
+    public int Vida = 20;
+
     // Las imágenes que se mostrarán para cada objeto detectado
     public Sprite ImgAlimentoSaludable1;
     public Sprite ImgAlimentoNOSaludable1;
-
-    // Los prefabs que ya están en la escena
-    public GameObject AnimAlimentoSaludable1;
-    public GameObject AnimAlimentoNOSaludable1;
 
     void Start()
     {
@@ -25,11 +25,17 @@ public class Detector : MonoBehaviour
             arCamera = Camera.main;
         }
         OcultarPanel();
-        OcultarTodosPrefabs();
+        
     }
 
     void Update()
     {
+        if (Vida <= 0)
+        {
+            MostrarPanelGameOver();
+            return; // Detener ejecución para evitar más interacciones
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = arCamera.ScreenPointToRay(Input.mousePosition);
@@ -43,23 +49,28 @@ public class Detector : MonoBehaviour
                 if (tag == "Saludable")
                 {
                     MostrarPanelSinPrefab("Alimento Saludable", "Este alimento es bueno para la diabetes", ImgAlimentoSaludable1);
-                    MostrarPrefab(AnimAlimentoSaludable1);
+                    Vida++;
+
+
                 }
                 else if (tag == "NoSaludable")
                 {
                     MostrarPanelSinPrefab("Alimento No Saludable", "Este alimento es malo par tu salud", ImgAlimentoNOSaludable1);
-                    MostrarPrefab(AnimAlimentoNOSaludable1);
+                    Vida--;
+                    if (Vida < 0)
+                    {
+                        
+                    }
                 }
                 else
                 {
                     OcultarPanel();
-                    OcultarTodosPrefabs();
+                   
                 }
             }
             else
             {
                 OcultarPanel();
-                OcultarTodosPrefabs();
             }
         }
         
@@ -90,11 +101,11 @@ public class Detector : MonoBehaviour
             prefab.SetActive(true); // Muestra el prefab
         }
     }
-
-    void OcultarTodosPrefabs()
+    void MostrarPanelGameOver()
     {
-        // Oculta todos los prefabs. Asegúrate de agregar aquí todos los prefabs que desees ocultar.
-        if (AnimAlimentoSaludable1 != null) AnimAlimentoSaludable1.SetActive(false);
-        if (AnimAlimentoNOSaludable1 != null) AnimAlimentoNOSaludable1.SetActive(false);
+        if (PanelGameOver != null)
+        {
+            PanelGameOver.SetActive(true);
+        }
     }
 }

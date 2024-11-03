@@ -14,4 +14,8 @@ public class MenuPrincipal : MonoBehaviour
         Application.Quit();
 
     }
+    public void Reiniciar()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }
